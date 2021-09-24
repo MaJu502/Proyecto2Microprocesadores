@@ -32,6 +32,8 @@ void power(int F[2][2], int n);
  
 int fib(int n)
 {
+
+    //POSIBLe ubicacion 
     
     int F[2][2] = { { 1, 1 }, { 1, 0 } };
     if (n == 0)
@@ -44,7 +46,7 @@ int fib(int n)
  
 void multiply(int F[2][2], int M[2][2])
 {
-    pthread_mutex_lock(&lock);
+    
 
     int x = F[0][0] * M[0][0] +
             F[0][1] * M[1][0];
@@ -54,6 +56,8 @@ void multiply(int F[2][2], int M[2][2])
             F[1][1] * M[1][0];
     int w = F[1][0] * M[0][1] +
             F[1][1] * M[1][1];
+
+    pthread_mutex_lock(&lock);
      
     F[0][0] = x;
     F[0][1] = y;
@@ -68,7 +72,8 @@ void power(int F[2][2], int n)
 {
     int i;
     int M[2][2] = { { 1, 1 }, { 1, 0 } };
-        
+    
+    //pthread en main  simplificar power y multiply   --- reciban 
     
     for(i = 2; i <= n; i++){
         err = pthread_create(&(tid[i]), NULL, &multiply(F,M), (void *)i);	//creacion de hilos con paso de parametros  ARREGLAR
