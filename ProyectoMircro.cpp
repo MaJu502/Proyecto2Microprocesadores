@@ -5,7 +5,7 @@
  * integrantes: 
  *      Marco Jurado 20308
  *      Andrés de la Roca
- *      José Auyón
+ *      José Auyón 201579
  * 
  *  Adaptado de method 4 geeksforgeeks
  **/
