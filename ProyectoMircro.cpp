@@ -8,6 +8,10 @@
  *      José Auyón 201579
  * 
  *  Adaptado de method 4 geeksforgeeks
+ * 
+ * 
+ * 46 es el limite gdb
+ * 79 es repl
  **/
 
  // Declaracion de librerias
@@ -18,24 +22,29 @@
 #include <stdlib.h>
 #include<string.h>
 #include<unistd.h>
+#include<ctime>
+
 using namespace std;
  
 //Declaracion de variables globales
 pthread_mutex_t lock1; // Bloqueo de hilos
-int result = 0;  //almacena resultado final
-int F[2][2] = { { 1, 1 }, { 1, 0 } };
-int M[2][2] = { { 1, 1 }, { 1, 0 } };
- 
+long double result = 0;  //almacena resultado final
+long double F[2][2] = { { 1, 1 }, { 1, 0 } };
+long double M[2][2] = { { 1, 1 }, { 1, 0 } };
+
+clock_t tiempoi, tiempof = 0;
+double tiempototal = 0;
+
 void *multiply(void *null)
 {
     pthread_mutex_lock(&lock1); //Bloqueo por mutex
-    int x = F[0][0] * M[0][0] +
+    long double x = F[0][0] * M[0][0] +
             F[0][1] * M[1][0];
-    int y = F[0][0] * M[0][1] +
+    long double y = F[0][0] * M[0][1] +
             F[0][1] * M[1][1];
-    int z = F[1][0] * M[0][0] +
+    long double z = F[1][0] * M[0][0] +
             F[1][1] * M[1][0];
-    int w = F[1][0] * M[0][1] +
+    long double w = F[1][0] * M[0][1] +
             F[1][1] * M[1][1];
     
     //semaforo 
@@ -57,11 +66,12 @@ int main()
     int n = 0;
     cout<< "Ingrese el numero a calcular se sucesion fibonacci: ";
     cin>>n;
-    //------------------------------------------------------------------  
-    
+    //------------------------------------------------------------------ 
+    tiempoi = clock();//TIEMPO INICIAL
+
     //Definir cantidad de threads 
     pthread_t tid[n]; 
-
+    
     //Execute a fib 
     if ( n == 1 || n == 2 ){
         cout << " el resultado es: 1";
@@ -71,15 +81,20 @@ int main()
     }
     else{
         int i;
-        for(i = 0; i < n; i++){
+        for(i = 2; i < n; i++){
             err = pthread_create(&(tid[i]), NULL, multiply, NULL);
             if (err != 0){
                 printf("\ncan't create thread :[%s]", strerror(err));
             }
+            pthread_join((tid[i]), NULL);
         }
         
-
+        pthread_mutex_destroy(&lock1);
+        
         result = F[0][0];
+        tiempof = clock();//TIEMPO FINAL
+        tiempototal = difftime(tiempof, tiempoi)/CLOCKS_PER_SEC;
         cout << " el resultado es: " << result << endl;
+        cout << " \nel tiempo tomado es de: " << tiempototal <<endl;
     }
 }
